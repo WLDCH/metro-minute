@@ -1,4 +1,9 @@
-CREATE TABLE IF NOT EXISTS arrets (
+BEGIN;
+
+CREATE SCHEMA IF NOT EXISTS referentiel_raw;
+CREATE SCHEMA IF NOT EXISTS core;
+
+CREATE TABLE IF NOT EXISTS referentiel_raw.arrets (
 ArRId INT PRIMARY KEY NOT NULL,
 ArRVersion VARCHAR(50),
 ArRCreated TIMESTAMP,
@@ -18,7 +23,7 @@ ArRVisualSigns VARCHAR(30),
 ArRFareZone VARCHAR(30)
 );
 
-CREATE TABLE IF NOT EXISTS lignes (
+CREATE TABLE IF NOT EXISTS referentiel_raw.lignes (
 ID_Line VARCHAR(10) PRIMARY KEY NOT NULL,
 Name_Line VARCHAR(255),
 ShortName_Line VARCHAR(255),
@@ -47,15 +52,17 @@ Status VARCHAR(30),
 PrivateCode VARCHAR(30)
 );
 
-CREATE TABLE IF NOT EXISTS donnees_temps_reel (
+CREATE TABLE IF NOT EXISTS referentiel_raw.donnees_temps_reel (
     MonitoringRef_ArR VARCHAR(50),
     ArRName VARCHAR(255),
     LineRef VARCHAR(50),
     Name_Line VARCHAR(255)
 );
 
-\copy arrets FROM './arrets.csv' DELIMITER ';' CSV HEADER;
+\copy referentiel_raw.arrets FROM './arrets.csv' DELIMITER ';' CSV HEADER;
 
-\copy lignes FROM './lignes.csv' DELIMITER ';' CSV HEADER;
+\copy referentiel_raw.lignes FROM './lignes.csv' DELIMITER ';' CSV HEADER;
 
-\copy donnees_temps_reel FROM './donnees-temps-reel.csv' DELIMITER ';' CSV HEADER;
+\copy referentiel_raw.donnees_temps_reel FROM './donnees-temps-reel.csv' DELIMITER ';' CSV HEADER;
+
+COMMIT;
