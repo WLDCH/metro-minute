@@ -1,0 +1,10 @@
+
+# dbt files
+*/target/
+*/dbt_packages/
+*/logs/
+
+# config files
+*.ini
+
+*.ipynb
