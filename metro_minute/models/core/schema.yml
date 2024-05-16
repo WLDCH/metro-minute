@@ -1,0 +1,137 @@
+version: 2
+
+
+sources:
+  - name: referentiel_raw
+    description: "Contient les données bruts issus des referentiels de Ile de France Mobilités"
+    database: metrominute
+    schema: referentiel_raw
+    tables:
+      - name: arrets
+        description: "Informations bruts sur les arrets"
+      - name: lignes
+        description: "Informations bruts sur les lignes"
+      - name: donnees_temps_reel
+        description: "Information bruts sur les données temps réel"
+
+models:
+  - name: arrets
+    description: "Ce modèle contient les informations sur les arrêts."
+    columns:
+      - name: ar_rid
+        description: "ID de l'arrêt."
+        tests:
+          - not_null
+          - unique
+      - name: ar_rref
+        description: "Stop Point ID "
+        tests:
+          - not_null
+      - name: ar_rversion
+        description: "Version de l'arrêt."
+      - name: ar_rname
+        description: "Nom de l'arrêt."
+        tests:
+          - not_null
+      - name: ar_rtype
+        description: "Type de l'arrêt."
+      - name: ar_rtown
+        description: "Ville de l'arrêt."
+        tests:
+          - not_null
+      - name: ar_raccessibilty
+        description: "Accessibilité de l'arrêt."
+
+  - name: lignes
+    description: "Ce modèle contient les informations sur les lignes de transport."
+    columns:
+      - name: line_id
+        description: "ID de la ligne."
+        tests:
+          - not_null
+          - unique
+      - name: line_ref
+        description: "Identifiant CodifLigne de la ligne"
+        tests:
+          - not_null
+      - name: line_name
+        description: "Nom de la ligne."
+        tests:
+          - not_null
+      - name: line_shortname
+        description: "Nom court de la ligne."
+      - name: transport_mode
+        description: "Mode de transport."
+        tests:
+          - not_null
+      - name: transport_submode
+        description: "Sous-mode de transport."
+      - name: operator_ref
+        description: "Référence de l'opérateur."
+      - name: operator_name
+        description: "Nom de l'opérateur."
+
+  - name: rer_temps_reel
+    description: "Ce modèle combine les données en temps réel avec les informations sur les lignes et les arrêts."
+    columns:
+      - name: ar_rref
+        description: "Stop Point ID "
+        tests:
+          - not_null
+      - name: ar_rname
+        description: "Nom de l'arrêt."
+        tests:
+          - not_null
+      - name: ar_rtown
+        description: "Ville de l'arrêt."
+        tests:
+          - not_null
+      - name: line_ref
+        description: "Identifiant CodifLigne de la ligne"
+        tests:
+          - not_null
+      - name: name_line
+        description: "Nom de la ligne."
+        tests:
+          - not_null
+      - name: transport_mode
+        description: "Mode de transport."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['rail']
+      - name: transport_submode
+        description: "Sous-mode de transport."
+
+
+  - name: metro_temps_reel
+    description: "Ce modèle combine les données en temps réel pour le métro avec les informations sur les lignes et les arrêts."
+    columns:
+      - name: ar_rref
+        description: "Stop Point ID"
+        tests:
+          - not_null
+      - name: ar_rname
+        description: "Nom de l'arrêt."
+        tests:
+          - not_null
+      - name: ar_rtown
+        description: "Ville de l'arrêt."
+        tests:
+          - not_null
+      - name: line_ref
+        description: "Identifiant CodifLigne de la ligne"
+        tests:
+          - not_null
+      - name: name_line
+        description: "Nom de la ligne."
+        tests:
+          - not_null
+      - name: transport_mode
+        description: "Mode de transport."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['metro']
+      - name: transport_submode
+        description: "Sous-mode de transport."
