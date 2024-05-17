@@ -48,6 +48,16 @@ headers = {
 
 
 def fetch_line_references(conn: connection, type: str) -> Dict[str, str]:
+    """
+    A function to fetch line references based on the type of transport.
+
+    Args:
+        conn (connection): The database connection.
+        type (str): The type of lines.
+
+    Returns:
+        Dict[str, str]: A dictionary mapping line names to their references.
+    """
     with conn.cursor() as cursor:
         query = f"SELECT DISTINCT(name_line, line_ref) FROM core.{type}_temps_reel"
         cursor.execute(query)
@@ -59,6 +69,17 @@ def fetch_line_references(conn: connection, type: str) -> Dict[str, str]:
 
 
 def fetch_stops_references(conn: connection, type: str, line: str) -> Dict[str, str]:
+    """
+    A function to fetch stops references based on the type and line provided.
+
+    Args:
+        conn (connection): The database connection.
+        type (str): The type of stops.
+        line (str): The line reference.
+
+    Returns:
+        Dict[str, str]: A dictionary mapping stops to their references.
+    """
     with conn.cursor() as cursor:
         query = f"SELECT DISTINCT(ar_rname, ar_rref) FROM core.{type}_temps_reel WHERE name_line = '{line}'"
         cursor.execute(query)
@@ -70,7 +91,18 @@ def fetch_stops_references(conn: connection, type: str, line: str) -> Dict[str, 
             stops_to_ref[stop].append(ref)
     return dict(stops_to_ref)
 
+
 def fetch_monitoring_stop_info(line: str, station: str) -> Dict[str, Any]:
+    """
+    Fetches monitoring stop information for a specific line and station.
+
+    Args:
+        line (str): The line reference.
+        station (str): The monitoring station reference.
+
+    Returns:
+        Dict[str, Any]: The response data containing monitoring stop information.
+    """
     response = requests.get(
         f"{BASE_URL}/stop-monitoring",
         params={
@@ -83,11 +115,24 @@ def fetch_monitoring_stop_info(line: str, station: str) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-def parse_monitoring_stop_info(data: Dict[str, Any], num_trains: int = 3) -> List[TrainInformation]:
+
+def parse_monitoring_stop_info(
+    data: Dict[str, Any], num_trains: int = 3
+) -> List[TrainInformation]:
+    """
+    Parses monitoring stop information from the provided data and returns a list of TrainInformation objects.
+
+    Args:
+        data (Dict[str, Any]): The monitoring stop information data to be parsed.
+        num_trains (int, optional): The number of trains to extract information for. Defaults to 3.
+
+    Returns:
+        List[TrainInformation]: A list of TrainInformation objects containing parsed information about the next trains.
+    """
     next_stops = []
-    monitored_stop_visit = data["Siri"]["ServiceDelivery"][
-        "StopMonitoringDelivery"
-    ][0]["MonitoredStopVisit"]
+    monitored_stop_visit = data["Siri"]["ServiceDelivery"]["StopMonitoringDelivery"][0][
+        "MonitoredStopVisit"
+    ]
 
     for next_train in range(0, num_trains):
         monitored_call = monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
@@ -100,89 +145,27 @@ def parse_monitoring_stop_info(data: Dict[str, Any], num_trains: int = 3) -> Lis
             else monitored_call.get("DestinationName")[0].get("value")
         )
 
-        journey_name = monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
-            "JourneyNote"
-        ][0].get("value") if len(monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
-            "JourneyNote"
-        ]) >= 1 else "None"
+        journey_name = (
+            monitored_stop_visit[next_train]["MonitoredVehicleJourney"]["JourneyNote"][
+                0
+            ].get("value")
+            if len(
+                monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
+                    "JourneyNote"
+                ]
+            )
+            >= 1
+            else "None"
+        )
 
         vehicle_at_stop = monitored_call.get("VehicleAtStop")
         departure_status = monitored_call.get("DepartureStatus")
         aimed_arrival_time = monitored_call.get("AimedArrivalTime", None)
-        aimed_arrival_time = datetime.strptime(
-            aimed_arrival_time, "%Y-%m-%dT%H:%M:%S.%fZ"
-        ) if aimed_arrival_time is not None else None
-        expected_arrival_time = datetime.strptime(
-            monitored_call.get("ExpectedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
+        aimed_arrival_time = (
+            datetime.strptime(aimed_arrival_time, "%Y-%m-%dT%H:%M:%S.%fZ")
+            if aimed_arrival_time is not None
+            else None
         )
-
-        train_info = TrainInformation(
-            destination_name=destination_name,
-            journey_name=journey_name,
-            vehicle_at_stop=vehicle_at_stop,
-            departure_status=departure_status,
-            aimed_arrival_time=aimed_arrival_time,
-            expected_arrival_time=expected_arrival_time,
-        )
-
-        next_stops.append(train_info)
-
-    return next_stops
-
-
-
-def get_arrival_time(
-    line: str, station: str, num_trains: int = 3
-) -> List[TrainInformation]:
-    """
-    Returns a list containing information about the next arrival times
-    of trains at a given station.
-
-    Args:
-        line (str): The name of the train line.
-        station (str): The name of the station where arrival times are desired.
-        num_trains (int, optional): The number of next trains to retrieve arrival times for.
-            Defaults to 3.
-
-    Returns:
-        List[TrainInformation]: A list of TrainInformation objects containing
-        information about the next arrival times of trains at the specified station.
-    """
-
-    response = requests.get(
-        f"{BASE_URL}/stop-monitoring",
-        params={
-            "LineRef": line,
-            "MonitoringRef": station,
-        },
-        headers=headers,
-    ).json()
-
-    next_stops = []
-    monitored_stop_visit = response["Siri"]["ServiceDelivery"][
-        "StopMonitoringDelivery"
-    ][0]["MonitoredStopVisit"]
-
-    for next_train in range(0, num_trains):
-        monitored_call = monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
-            "MonitoredCall"
-        ]
-
-        destination_name = (
-            monitored_call.get("DestinationDisplay")[0].get("value")
-            if monitored_call.get("DestinationName") is None
-            else monitored_call.get("DestinationName")[0].get("value")
-        )
-        # journey_name = monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
-        #     "JourneyNote"
-        # ][0].get("value") # this raise error
-        journey_name = "none"
-        vehicle_at_stop = monitored_call.get("VehicleAtStop")
-        departure_status = monitored_call.get("DepartureStatus")
-        # aimed_arrival_time = datetime.strptime(
-        #     monitored_call.get("AimedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
-        # ) #Not always provided
-        aimed_arrival_time = datetime(2024, 5, 16)
         expected_arrival_time = datetime.strptime(
             monitored_call.get("ExpectedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
         )
@@ -218,9 +201,18 @@ if __name__ == "__main__":
     line_ref = metro_line_refs["13"]
     stops_ref = metro_13_stops_refs['"Gabriel Péri"']
 
-    stop_monitoring_data = fetch_monitoring_stop_info(line=line_ref, station=stops_ref)
-    next_trains = parse_monitoring_stop_info(data=stop_monitoring_data, num_trains=3)
-    # print(next_trains)
-    # print(metro_13_stops_refs)
-    print(line_ref)
-    print(stops_ref)
+    stop_monitoring_data_aller = fetch_monitoring_stop_info(
+        line=line_ref, station=stops_ref[0]
+    )
+    stop_monitoring_data_retour = fetch_monitoring_stop_info(
+        line=line_ref, station=stops_ref[1]
+    )
+    next_train_aller = parse_monitoring_stop_info(
+        data=stop_monitoring_data_aller, num_trains=1
+    )
+    next_train_retour = parse_monitoring_stop_info(
+        data=stop_monitoring_data_retour, num_trains=1
+    )
+
+    print(next_train_aller)
+    print(next_train_retour)
