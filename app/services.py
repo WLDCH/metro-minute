@@ -8,8 +8,9 @@ from collections import defaultdict
 
 import requests
 
-import psycopg2
 from psycopg2.extensions import connection
+
+from database import get_db_connection
 
 
 @dataclass
@@ -185,15 +186,9 @@ def parse_monitoring_stop_info(
 
 
 if __name__ == "__main__":
-    db_params = {
-        "host": "localhost",
-        "database": "metrominute",
-        "user": "postgres",
-        "password": "postgres",
-        "port": 5432,
-    }
 
-    conn = psycopg2.connect(**db_params)
+
+    conn = get_db_connection()
 
     metro_line_refs = fetch_line_references(conn=conn, type="metro")
     metro_13_stops_refs = fetch_stops_references(conn=conn, type="metro", line="13")
