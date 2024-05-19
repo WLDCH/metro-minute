@@ -58,13 +58,13 @@ def fetch_stops_references(conn: connection, type: str, line: str) -> Dict[str, 
     return dict(stops_to_ref)
 
 
-def fetch_monitoring_stop_info(line: str, station: str) -> Dict[str, Any]:
+def fetch_monitoring_stop_info(line: str, stop: str) -> Dict[str, Any]:
     """
-    Fetches monitoring stop information for a specific line and station.
+    Fetches monitoring stop information for a specific line and stop.
 
     Args:
         line (str): The line reference.
-        station (str): The monitoring station reference.
+        stop (str): The monitoring stop reference.
 
     Returns:
         Dict[str, Any]: The response data containing monitoring stop information.
@@ -73,7 +73,7 @@ def fetch_monitoring_stop_info(line: str, station: str) -> Dict[str, Any]:
         f"{BASE_URL}/stop-monitoring",
         params={
             "LineRef": line,
-            "MonitoringRef": station,
+            "MonitoringRef": stop,
         },
         headers=HEADERS,
     )
@@ -154,16 +154,16 @@ if __name__ == "__main__":
     conn = get_db_connection()
 
     metro_line_refs = fetch_line_references(conn=conn, type="metro")
-    metro_13_stops_refs = fetch_stops_references(conn=conn, type="metro", line="13")
+    metro_stops_refs = fetch_stops_references(conn=conn, type="metro", line="12")
 
-    line_ref = metro_line_refs["13"]
-    stops_ref = metro_13_stops_refs['"Gabriel Péri"']
+    line_ref = metro_line_refs["12"]
+    stops_ref = metro_stops_refs['Rennes']
 
     stop_monitoring_data_aller = fetch_monitoring_stop_info(
-        line=line_ref, station=stops_ref[0]
+        line=line_ref, stop=stops_ref[0]
     )
     stop_monitoring_data_retour = fetch_monitoring_stop_info(
-        line=line_ref, station=stops_ref[1]
+        line=line_ref, stop=stops_ref[1]
     )
     next_train_aller = parse_monitoring_stop_info(
         data=stop_monitoring_data_aller, num_trains=1
