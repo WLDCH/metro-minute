@@ -1,7 +1,5 @@
 """Module providing services related to train information retrieval."""
 
-from configparser import ConfigParser
-from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Dict, Any
 from collections import defaultdict
@@ -11,41 +9,8 @@ import requests
 from psycopg2.extensions import connection
 
 from database import get_db_connection
-
-
-@dataclass
-class TrainInformation:
-    """
-    Represents information about a train's arrival and departure.
-
-    Attributes:
-        destination_name (str): The name of the train's destination.
-        journey_name (str): The name of the train's journey.
-        vehicle_at_stop (bool): Indicates whether the vehicle is at the stop.
-        departure_status (str): The departure status of the train.
-        aimed_arrival_time (datetime): The scheduled (theoretical) arrival time of the train in format : "STIF:Line::CXXXXX:" with CXXXXX being the line identifier in Lignes Référentiel
-        expected_arrival_time (datetime): The expected arrival time of the train in format "STIF:StopPoint:Q:XXXXX:" with XXXXX being the identifier in the Arrêts Référentiel.
-    """
-
-    destination_name: str
-    journey_name: str
-    vehicle_at_stop: bool
-    departure_status: str
-    aimed_arrival_time: datetime
-    expected_arrival_time: datetime
-
-
-config = ConfigParser()
-config.read("config.ini")
-API_TOKEN = config["api-token"]["TOKEN"]
-
-
-BASE_URL = "https://prim.iledefrance-mobilites.fr/marketplace"
-headers = {
-    "apiKey": API_TOKEN,
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-}
+from models import TrainInformation
+from config import BASE_URL, HEADERS
 
 
 def fetch_line_references(conn: connection, type: str) -> Dict[str, str]:
@@ -110,7 +75,7 @@ def fetch_monitoring_stop_info(line: str, station: str) -> Dict[str, Any]:
             "LineRef": line,
             "MonitoringRef": station,
         },
-        headers=headers,
+        headers=HEADERS,
     )
 
     response.raise_for_status()
@@ -186,8 +151,6 @@ def parse_monitoring_stop_info(
 
 
 if __name__ == "__main__":
-
-
     conn = get_db_connection()
 
     metro_line_refs = fetch_line_references(conn=conn, type="metro")
