@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         document.getElementById(sectionId + '-section').style.display = 'block';
     }
 
+    function formatMinutes(minutes) {
+        const unit = minutes < 2 ? 'minute' : 'minutes';
+        return `${minutes} ${unit}`;
+    }
+
     function loadStopsNames(line, type) {
         fetch(`/stops?line=${line}&type=${type}`)
         .then(response => {
@@ -58,10 +63,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
             schedulesContainer.innerHTML = ''; // Clear previous results
 
             if (data.schedules && data.schedules.length > 0) {
-                data.schedules.forEach(schedule => {
+                data.schedules.forEach((schedule, index) => {
                     const scheduleItem = document.createElement('div');
                     scheduleItem.classList.add('schedule-item');
-                    scheduleItem.textContent = schedule;
+
+                    const destination = document.createElement('span');
+                    destination.classList.add('destination');
+                    destination.textContent = data.destination_names[index];
+
+                    const minutes = parseFloat(schedule);
+                    const time = document.createElement('span');
+                    time.classList.add('time');
+                    time.textContent = formatMinutes(minutes);
+
+                    scheduleItem.appendChild(destination);
+                    scheduleItem.appendChild(time);
                     schedulesContainer.appendChild(scheduleItem);
                 });
             } else {

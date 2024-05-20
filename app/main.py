@@ -51,7 +51,9 @@ async def get_schedules(line: str = Query(...), type: str = Query(...), stop: st
     next_train_aller = parse_monitoring_stop_info(data=stop_monitoring_data_aller, num_trains=1)
     next_train_retour = parse_monitoring_stop_info(data=stop_monitoring_data_retour, num_trains=1)
 
-    return {'schedules': [next_train_aller[0].expected_arrival_time, next_train_retour[0].expected_arrival_time]}
+    return {'schedules': [next_train_aller[0].arrival_time_in_minutes, next_train_retour[0].arrival_time_in_minutes],
+            'destination_names': [next_train_aller[0].destination_name, next_train_retour[0].destination_name],
+            }
 
 
 

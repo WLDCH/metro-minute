@@ -140,6 +140,8 @@ def parse_monitoring_stop_info(
             monitored_call.get("ExpectedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
         )
 
+        arrival_time_in_minute = round((expected_arrival_time - datetime.utcnow()).total_seconds() / 60)
+
         train_info = TrainInformation(
             destination_name=destination_name,
             journey_name=journey_name,
@@ -147,6 +149,7 @@ def parse_monitoring_stop_info(
             departure_status=departure_status,
             aimed_arrival_time=aimed_arrival_time,
             expected_arrival_time=expected_arrival_time,
+            arrival_time_in_minutes=arrival_time_in_minute
         )
 
         next_stops.append(train_info)

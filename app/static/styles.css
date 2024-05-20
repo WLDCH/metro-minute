@@ -50,9 +50,20 @@ button {
     padding: 10px;
 }
 
-.result-item {
+.schedule-item {
+    display: flex;
+    justify-content: space-between;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 10px;
     margin-bottom: 5px;
+}
+
+.schedule-item .destination {
+    font-weight: bold;
+    margin-right: 10px; /* Ajouter un espace entre destination et temps */
+}
+
+.schedule-item .time {
+    font-style: italic;
 }
