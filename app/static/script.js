@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     function loadStopsNames(line, type) {
+
+        const schedulesContainer = document.getElementById('schedules-container');
+        schedulesContainer.innerHTML = '';
+
         fetch(`/stops?line=${line}&type=${type}`)
         .then(response => {
             if (!response.ok) {
@@ -28,6 +32,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 select.setAttribute('data-line', line);
                 select.setAttribute('data-type', type);
                 select.addEventListener('change', handleStopSelection);
+
+                const defaultOption = document.createElement('option');
+                defaultOption.textContent = 'Choisissez un arrêt';
+                defaultOption.value = '';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                select.appendChild(defaultOption);
+
                 data.stops.forEach(stop => {
                     const option = document.createElement('option');
                     option.textContent = stop;
@@ -46,6 +58,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     function handleStopSelection(event) {
         const selectedStop = event.target.value;
+        if (selectedStop === '') {
+            return; // Ne rien faire si l'option par défaut est sélectionnée
+        }
+        
         const line = event.target.getAttribute('data-line');
         const type = event.target.getAttribute('data-type');
         console.log(`Selected stop: ${selectedStop}, Line: ${line}, Type: ${type}`);
