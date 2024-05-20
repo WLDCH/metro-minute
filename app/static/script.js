@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 const schedulesContainer = document.getElementById('schedules-container');
                 schedulesContainer.innerHTML = ''; // Clear previous results
 
-                if (data.schedules && data.schedules.length > 0) {
-                    data.schedules.forEach((schedule, index) => {
+                if (data.schedules_in_minutes && data.schedules_in_minutes.length > 0) {
+                    data.schedules_in_minutes.forEach((schedule, index) => {
                         const scheduleItem = document.createElement('div');
                         scheduleItem.classList.add('schedule-item');
 
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         const minutes = parseFloat(schedule);
                         const time = document.createElement('span');
                         time.classList.add('time');
-                        time.textContent = formatMinutes(minutes);
+                        time.textContent = `${formatMinutes(minutes)} (${data.schedules_in_time[index]})`;
 
                         scheduleItem.appendChild(destination);
                         scheduleItem.appendChild(time);

@@ -1,7 +1,12 @@
 from configparser import ConfigParser
+from datetime import datetime
+import pytz
 
 config = ConfigParser()
 config.read("config.ini")
+
+paris_tz = pytz.timezone("Europe/Paris")
+
 
 API_TOKEN = config["api-token"]["TOKEN"]
 

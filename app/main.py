@@ -63,21 +63,25 @@ async def get_schedules(
     )
 
     next_train_aller = parse_monitoring_stop_info(
-        data=stop_monitoring_data_aller, num_trains=1
+        data=stop_monitoring_data_aller, num_trains=5
     )
     next_train_retour = parse_monitoring_stop_info(
-        data=stop_monitoring_data_retour, num_trains=1
+        data=stop_monitoring_data_retour, num_trains=5
     )
 
     return {
-        "schedules": [
-            next_train_aller[0].arrival_time_in_minutes,
-            next_train_retour[0].arrival_time_in_minutes,
-        ],
+        "schedules_in_minutes": [
+            next_train.arrival_time_in_minutes for next_train in next_train_aller
+        ]
+        + [next_train.arrival_time_in_minutes for next_train in next_train_retour],
+        "schedules_in_time": [
+            next_train.arrival_time_local for next_train in next_train_aller
+        ]
+        + [next_train.arrival_time_local for next_train in next_train_retour],
         "destination_names": [
-            next_train_aller[0].destination_name,
-            next_train_retour[0].destination_name,
-        ],
+            next_train.destination_name for next_train in next_train_aller
+        ]
+        + [next_train.destination_name for next_train in next_train_retour],
     }
 
 

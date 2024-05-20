@@ -4,13 +4,15 @@ from datetime import datetime
 from typing import List, Dict, Any
 from collections import defaultdict
 
+import pytz
+
 import requests
 
 from psycopg2.extensions import connection
 
 from database import get_db_connection
 from models import TrainInformation
-from config import BASE_URL, HEADERS
+from config import BASE_URL, HEADERS, paris_tz
 
 
 def fetch_line_references(conn: connection, type: str) -> Dict[str, str]:
@@ -105,7 +107,7 @@ def parse_monitoring_stop_info(
         "MonitoredStopVisit"
     ]
 
-    for next_train in range(0, num_trains):
+    for next_train in range(0, min(len(monitored_stop_visit), num_trains)):
         monitored_call = monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
             "MonitoredCall"
         ]
@@ -145,6 +147,10 @@ def parse_monitoring_stop_info(
             (expected_arrival_time - datetime.utcnow()).total_seconds() / 60
         )
 
+        arrival_time_local = (
+            expected_arrival_time.replace(tzinfo=pytz.utc).astimezone(paris_tz).time().strftime("%H:%M:%S")
+        )
+
         train_info = TrainInformation(
             destination_name=destination_name,
             journey_name=journey_name,
@@ -153,6 +159,7 @@ def parse_monitoring_stop_info(
             aimed_arrival_time=aimed_arrival_time,
             expected_arrival_time=expected_arrival_time,
             arrival_time_in_minutes=arrival_time_in_minute,
+            arrival_time_local=arrival_time_local,
         )
 
         next_stops.append(train_info)
