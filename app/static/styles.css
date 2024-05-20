@@ -50,6 +50,13 @@ button {
     padding: 10px;
 }
 
+#metro-buttons img {
+    margin: 5px;
+    cursor: pointer;
+    width: 30px;  /* Ajuster la taille des logos selon vos besoins */
+    height: 30px; /* Ajuster la taille des logos selon vos besoins */
+}
+
 .schedule-item {
     display: flex;
     justify-content: space-between;
@@ -61,8 +68,7 @@ button {
 
 .schedule-item .destination {
     font-weight: bold;
-    margin-right: 10px;
-    /* Ajouter un espace entre destination et temps */
+    margin-right: 10px; /* Ajouter un espace entre destination et temps */
 }
 
 .schedule-item .time {
