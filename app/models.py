@@ -22,3 +22,4 @@ class TrainInformation:
     departure_status: str
     aimed_arrival_time: datetime
     expected_arrival_time: datetime
+    arrival_time_in_minutes: int
