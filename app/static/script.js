@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     defaultOption.selected = true;
                     select.appendChild(defaultOption);
 
+                    data.stops.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' })); // Tri sans compter les accents
+
                     data.stops.forEach(stop => {
                         const option = document.createElement('option');
                         option.textContent = stop;
