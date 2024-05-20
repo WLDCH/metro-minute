@@ -8,6 +8,9 @@ from starlette.requests import Request
 
 import uvicorn
 
+from services import fetch_stops_names
+from database import get_db_connection
+
 
 app = FastAPI()
 
@@ -27,25 +30,13 @@ async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 #@app.get("/api/schedule/")
-@app.get("/metro")
-async def get_metro_schedule(metro_number: int = Query(...)):
-    schedules = {
-        1: ["08:00", "08:15", "08:30"],
-        2: ["09:00", "09:15", "09:30"],
-        3: ["10:00", "10:15", "10:30"],
-        4: ["11:00", "11:15", "11:30"],
-        5: ["12:00", "12:15", "12:30"],
-        6: ["13:00", "13:15", "13:30"],
-        7: ["14:00", "14:15", "14:30"],
-        8: ["15:00", "15:15", "15:30"],
-        9: ["16:00", "16:15", "16:30"],
-        10: ["17:00", "17:15", "17:30"],
-        11: ["18:00", "18:15", "18:30"],
-        12: ["19:00", "19:15", "19:30"],
-        13: ["20:00", "20:15", "20:30"],
-        14: ["21:00", "21:15", "21:30"]
-    }
-    return {"schedules": schedules.get(metro_number, [])}
+@app.get("/stops")
+async def get_stops(line: str  = Query(...), type: str = Query(...)):
+
+    stops = fetch_stops_names(conn=get_db_connection(), type=type, line=line)
+    return {'stops': stops}
+
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

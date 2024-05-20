@@ -4,9 +4,8 @@ function showSection(sectionId) {
     document.getElementById(sectionId + '-section').style.display = 'block';
 }
 
-function loadMetroSchedule(metroNumber) {
-    console.log(`Loading schedule for Metro ${metroNumber}`);
-    fetch(`/metro?metro_number=${metroNumber}`)
+function loadStopsNames(line, type) {
+    fetch(`/stops?line=${line}&type=${type}`)
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -15,22 +14,22 @@ function loadMetroSchedule(metroNumber) {
     })
     .then(data => {
         console.log('Data received:', data);
-        const scheduleList = document.getElementById('schedule-list');
-        scheduleList.innerHTML = ''; // Clear previous list items
+        const stopsList = document.getElementById('stops-list');
+        stopsList.innerHTML = ''; // Clear previous list items
 
-        if (data.schedules.length > 0) {
+        if (data.stops.length > 0) {
             const select = document.createElement('select');
-            data.schedules.forEach(schedule => {
+            data.stops.forEach(schedule => {
                 const option = document.createElement('option');
                 option.textContent = schedule;
                 select.appendChild(option);
             });
-            scheduleList.appendChild(select);
+            stopsList.appendChild(select);
         } else {
             const noData = document.createElement('p');
             noData.textContent = 'No schedule available';
-            scheduleList.appendChild(noData);
+            stopsList.appendChild(noData);
         }
     })
-    .catch(error => console.error('Error fetching schedules:', error));
+    .catch(error => console.error('Error fetching stops:', error));
 }
