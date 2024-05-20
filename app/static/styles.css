@@ -17,6 +17,8 @@ body {
 .content {
     flex-grow: 1;
     padding: 20px;
+    align-items: center;
+
 }
 
 ul {
@@ -43,6 +45,8 @@ a:hover {
 
 #horaire-section {
     display: block;
+    text-align: center;
+
 }
 
 button {
@@ -50,11 +54,46 @@ button {
     padding: 10px;
 }
 
+#metro-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
 #metro-buttons img {
     margin: 5px;
     cursor: pointer;
-    width: 30px;  /* Ajuster la taille des logos selon vos besoins */
-    height: 30px; /* Ajuster la taille des logos selon vos besoins */
+    width: 30px; 
+    height: 30px;
+}
+
+#rer-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+#rer-buttons img {
+    margin: 5px;
+    cursor: pointer;
+    width: 30px; 
+    height: 30px;
+}
+
+#tram-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+#tram-buttons img {
+    margin: 5px;
+    cursor: pointer;
+    width: 30px; 
+    height: 30px;
 }
 
 .schedule-item {
@@ -68,7 +107,7 @@ button {
 
 .schedule-item .destination {
     font-weight: bold;
-    margin-right: 10px; /* Ajouter un espace entre destination et temps */
+    margin-right: 10px; 
 }
 
 .schedule-item .time {

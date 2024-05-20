@@ -170,24 +170,26 @@ def parse_monitoring_stop_info(
 if __name__ == "__main__":
     conn = get_db_connection()
 
-    metro_line_refs = fetch_line_references(conn=conn, type="metro")
-    metro_stops_refs = fetch_stops_references(conn=conn, type="metro", line="12")
+    # metro_line_refs = fetch_line_references(conn=conn, type="metro")
+    # metro_stops_refs = fetch_stops_references(conn=conn, type="metro", line="12")
 
-    line_ref = metro_line_refs["12"]
-    stops_ref = metro_stops_refs["Rennes"]
+    # line_ref = metro_line_refs["12"]
+    # stops_ref = metro_stops_refs["Rennes"]
 
-    stop_monitoring_data_aller = fetch_monitoring_stop_info(
-        line=line_ref, stop=stops_ref[0]
-    )
-    stop_monitoring_data_retour = fetch_monitoring_stop_info(
-        line=line_ref, stop=stops_ref[1]
-    )
-    next_train_aller = parse_monitoring_stop_info(
-        data=stop_monitoring_data_aller, num_trains=1
-    )
-    next_train_retour = parse_monitoring_stop_info(
-        data=stop_monitoring_data_retour, num_trains=1
-    )
+    # stop_monitoring_data_aller = fetch_monitoring_stop_info(
+    #     line=line_ref, stop=stops_ref[0]
+    # )
+    # stop_monitoring_data_retour = fetch_monitoring_stop_info(
+    #     line=line_ref, stop=stops_ref[1]
+    # )
+    # next_train_aller = parse_monitoring_stop_info(
+    #     data=stop_monitoring_data_aller, num_trains=1
+    # )
+    # next_train_retour = parse_monitoring_stop_info(
+    #     data=stop_monitoring_data_retour, num_trains=1
+    # )
 
-    print(next_train_aller)
-    print(next_train_retour)
+    # print(next_train_aller)
+    # print(next_train_retour)
+
+    print(fetch_stops_names(conn=conn, type="tram", line="1"))
