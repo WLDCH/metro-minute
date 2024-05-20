@@ -61,7 +61,8 @@ button {
 
 .schedule-item .destination {
     font-weight: bold;
-    margin-right: 10px; /* Ajouter un espace entre destination et temps */
+    margin-right: 10px;
+    /* Ajouter un espace entre destination et temps */
 }
 
 .schedule-item .time {

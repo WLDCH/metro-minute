@@ -57,6 +57,7 @@ def fetch_stops_references(conn: connection, type: str, line: str) -> Dict[str, 
             stops_to_ref[stop].append(ref)
     return dict(stops_to_ref)
 
+
 def fetch_stops_names(conn: connection, type: str, line: str) -> List[str]:
     stops_to_ref = fetch_stops_references(conn=conn, type=type, line=line)
     return list(stops_to_ref.keys())
@@ -140,7 +141,9 @@ def parse_monitoring_stop_info(
             monitored_call.get("ExpectedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
         )
 
-        arrival_time_in_minute = round((expected_arrival_time - datetime.utcnow()).total_seconds() / 60)
+        arrival_time_in_minute = round(
+            (expected_arrival_time - datetime.utcnow()).total_seconds() / 60
+        )
 
         train_info = TrainInformation(
             destination_name=destination_name,
@@ -149,7 +152,7 @@ def parse_monitoring_stop_info(
             departure_status=departure_status,
             aimed_arrival_time=aimed_arrival_time,
             expected_arrival_time=expected_arrival_time,
-            arrival_time_in_minutes=arrival_time_in_minute
+            arrival_time_in_minutes=arrival_time_in_minute,
         )
 
         next_stops.append(train_info)
@@ -164,7 +167,7 @@ if __name__ == "__main__":
     metro_stops_refs = fetch_stops_references(conn=conn, type="metro", line="12")
 
     line_ref = metro_line_refs["12"]
-    stops_ref = metro_stops_refs['Rennes']
+    stops_ref = metro_stops_refs["Rennes"]
 
     stop_monitoring_data_aller = fetch_monitoring_stop_info(
         line=line_ref, stop=stops_ref[0]
