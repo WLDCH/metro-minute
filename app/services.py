@@ -50,7 +50,7 @@ def fetch_stops_references(conn: connection, type: str, line: str) -> Dict[str, 
         query = f"SELECT DISTINCT(ar_rname, ar_rref) FROM core.{type}_temps_reel WHERE name_line = '{line}'"
         cursor.execute(query)
         rows = cursor.fetchall()
-        stops = [row[0].split(",")[0][1:] for row in rows]
+        stops = [row[0].split(",")[0][1:].strip('"') for row in rows]
         refs = [row[0].split(",")[1][:-1] for row in rows]
         stops_to_ref = defaultdict(list)
         for stop, ref in zip(stops, refs):
