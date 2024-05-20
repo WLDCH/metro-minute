@@ -57,6 +57,10 @@ def fetch_stops_references(conn: connection, type: str, line: str) -> Dict[str, 
             stops_to_ref[stop].append(ref)
     return dict(stops_to_ref)
 
+def fetch_stops_names(conn: connection, type: str, line: str) -> List[str]:
+    stops_to_ref = fetch_stops_references(conn=conn, type=type, line=line)
+    return list(stops_to_ref.keys())
+
 
 def fetch_monitoring_stop_info(line: str, stop: str) -> Dict[str, Any]:
     """
