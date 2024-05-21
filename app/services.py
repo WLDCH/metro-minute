@@ -1,18 +1,15 @@
 """Module providing services related to train information retrieval."""
 
-from datetime import datetime
-from typing import List, Dict, Any
 from collections import defaultdict
+from datetime import datetime
+from typing import Any, Dict, List
 
 import pytz
-
 import requests
-
-from psycopg2.extensions import connection
-
+from config import BASE_URL, HEADERS, paris_tz
 from database import get_db_connection
 from models import TrainInformation
-from config import BASE_URL, HEADERS, paris_tz
+from psycopg2.extensions import connection
 
 
 def fetch_line_references(conn: connection, type: str) -> Dict[str, str]:
@@ -76,7 +73,6 @@ def fetch_monitoring_stop_info(line: str, stop: str) -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: The response data containing monitoring stop information.
     """
-    print(f'{line} - {stop}')
     response = requests.get(
         f"{BASE_URL}/stop-monitoring",
         params={
@@ -108,11 +104,9 @@ def parse_monitoring_stop_info(
         "MonitoredStopVisit"
     ]
 
-    print(f'{monitored_stop_visit=}')
-
     next_train = 0
     utc_now = datetime.utcnow()
-    while len(next_stops) < num_trains and len(monitored_stop_visit)>next_train:
+    while len(next_stops) < num_trains and len(monitored_stop_visit) > next_train:
         monitored_call = monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
             "MonitoredCall"
         ]
@@ -144,15 +138,15 @@ def parse_monitoring_stop_info(
             if aimed_arrival_time is not None
             else None
         )
-        
-        if monitored_call.get('ExpectedArrivalTime') is not None:
+
+        if monitored_call.get("ExpectedArrivalTime") is not None:
             expected_arrival_time = datetime.strptime(
                 monitored_call.get("ExpectedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
             )
         else:
             expected_arrival_time = datetime.strptime(
                 monitored_call.get("ExpectedDepartureTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
-            ) # case when stop is terminus
+            )  # case when stop is terminus
 
         if expected_arrival_time < utc_now:
             next_train += 1
@@ -163,7 +157,10 @@ def parse_monitoring_stop_info(
         )
 
         arrival_time_local = (
-            expected_arrival_time.replace(tzinfo=pytz.utc).astimezone(paris_tz).time().strftime("%H:%M:%S")
+            expected_arrival_time.replace(tzinfo=pytz.utc)
+            .astimezone(paris_tz)
+            .time()
+            .strftime("%H:%M:%S")
         )
 
         train_info = TrainInformation(
@@ -192,7 +189,7 @@ if __name__ == "__main__":
     line_ref = line_refs["B"]
     stops_ref = stops_refs["Villepinte"]
 
-    print('{line_ref=} - {stops_ref=}')
+    print("{line_ref=} - {stops_ref=}")
 
     stop_monitoring_data_aller = fetch_monitoring_stop_info(
         line=line_ref, stop=stops_ref[0]

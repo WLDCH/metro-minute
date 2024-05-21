@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from datetime import datetime
+
 import pytz
 
 config = ConfigParser()

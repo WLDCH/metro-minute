@@ -1,21 +1,14 @@
+import uvicorn
+from database import get_db_connection
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
+from services import (fetch_line_references, fetch_monitoring_stop_info,
+                      fetch_stops_names, fetch_stops_references,
+                      parse_monitoring_stop_info)
 from starlette.requests import Request
-
-import uvicorn
-
-from services import (
-    fetch_line_references,
-    fetch_stops_names,
-    fetch_monitoring_stop_info,
-    fetch_stops_references,
-    parse_monitoring_stop_info,
-)
-from database import get_db_connection
-
 
 app = FastAPI()
 
@@ -53,7 +46,7 @@ async def get_schedules(
     stops_refs = fetch_stops_references(conn=get_db_connection(), type=type, line=line)
     line_ref = lines_refs[line]
     stop_ref_aller = stops_refs[stop][0]
-    stop_ref_retour = stops_refs[stop][1] if len(stops_refs[stop])>1 else []
+    stop_ref_retour = stops_refs[stop][1] if len(stops_refs[stop]) > 1 else []
 
     stop_monitoring_data_aller = fetch_monitoring_stop_info(
         line=line_ref, stop=stop_ref_aller
@@ -71,8 +64,6 @@ async def get_schedules(
         )
     else:
         next_train_retour = []
-
-
 
     return {
         "schedules_in_minutes": [
