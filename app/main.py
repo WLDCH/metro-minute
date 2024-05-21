@@ -59,7 +59,7 @@ async def get_schedules(
         line=line_ref, stop=stop_ref_aller
     )
     next_train_aller = parse_monitoring_stop_info(
-        data=stop_monitoring_data_aller, num_trains=5
+        data=stop_monitoring_data_aller, num_trains=10
     )
 
     if stop_ref_retour != []:
@@ -67,7 +67,7 @@ async def get_schedules(
             line=line_ref, stop=stop_ref_retour
         )
         next_train_retour = parse_monitoring_stop_info(
-            data=stop_monitoring_data_retour, num_trains=5
+            data=stop_monitoring_data_retour, num_trains=10
         )
     else:
         next_train_retour = []
