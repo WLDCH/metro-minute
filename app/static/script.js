@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 });
             } else {
                 const noData = document.createElement('p');
-                noData.textContent = 'No schedules available';
+                noData.textContent = 'Aucun départ actuellement';
                 schedulesContainer.appendChild(noData);
             }
         })
