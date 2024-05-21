@@ -53,21 +53,26 @@ async def get_schedules(
     stops_refs = fetch_stops_references(conn=get_db_connection(), type=type, line=line)
     line_ref = lines_refs[line]
     stop_ref_aller = stops_refs[stop][0]
-    stop_ref_retour = stops_refs[stop][1]
+    stop_ref_retour = stops_refs[stop][1] if len(stops_refs[stop])>1 else []
 
     stop_monitoring_data_aller = fetch_monitoring_stop_info(
         line=line_ref, stop=stop_ref_aller
     )
-    stop_monitoring_data_retour = fetch_monitoring_stop_info(
-        line=line_ref, stop=stop_ref_retour
-    )
-
     next_train_aller = parse_monitoring_stop_info(
         data=stop_monitoring_data_aller, num_trains=5
     )
-    next_train_retour = parse_monitoring_stop_info(
-        data=stop_monitoring_data_retour, num_trains=5
-    )
+
+    if stop_ref_retour != []:
+        stop_monitoring_data_retour = fetch_monitoring_stop_info(
+            line=line_ref, stop=stop_ref_retour
+        )
+        next_train_retour = parse_monitoring_stop_info(
+            data=stop_monitoring_data_retour, num_trains=5
+        )
+    else:
+        next_train_retour = []
+
+
 
     return {
         "schedules_in_minutes": [

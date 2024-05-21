@@ -76,6 +76,7 @@ def fetch_monitoring_stop_info(line: str, stop: str) -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: The response data containing monitoring stop information.
     """
+    print(f'{line} - {stop}')
     response = requests.get(
         f"{BASE_URL}/stop-monitoring",
         params={
@@ -107,7 +108,11 @@ def parse_monitoring_stop_info(
         "MonitoredStopVisit"
     ]
 
-    for next_train in range(0, min(len(monitored_stop_visit), num_trains)):
+    print(f'{monitored_stop_visit=}')
+
+    next_train = 0
+    utc_now = datetime.utcnow()
+    while len(next_stops) < num_trains and len(monitored_stop_visit)>next_train:
         monitored_call = monitored_stop_visit[next_train]["MonitoredVehicleJourney"][
             "MonitoredCall"
         ]
@@ -139,9 +144,19 @@ def parse_monitoring_stop_info(
             if aimed_arrival_time is not None
             else None
         )
-        expected_arrival_time = datetime.strptime(
-            monitored_call.get("ExpectedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
-        )
+        
+        if monitored_call.get('ExpectedArrivalTime') is not None:
+            expected_arrival_time = datetime.strptime(
+                monitored_call.get("ExpectedArrivalTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
+            )
+        else:
+            expected_arrival_time = datetime.strptime(
+                monitored_call.get("ExpectedDepartureTime"), "%Y-%m-%dT%H:%M:%S.%fZ"
+            ) # case when stop is terminus
+
+        if expected_arrival_time < utc_now:
+            next_train += 1
+            continue
 
         arrival_time_in_minute = round(
             (expected_arrival_time - datetime.utcnow()).total_seconds() / 60
@@ -163,6 +178,7 @@ def parse_monitoring_stop_info(
         )
 
         next_stops.append(train_info)
+        next_train += 1
 
     return next_stops
 
@@ -170,26 +186,26 @@ def parse_monitoring_stop_info(
 if __name__ == "__main__":
     conn = get_db_connection()
 
-    # metro_line_refs = fetch_line_references(conn=conn, type="metro")
-    # metro_stops_refs = fetch_stops_references(conn=conn, type="metro", line="12")
+    line_refs = fetch_line_references(conn=conn, type="rer")
+    stops_refs = fetch_stops_references(conn=conn, type="rer", line="B")
 
-    # line_ref = metro_line_refs["12"]
-    # stops_ref = metro_stops_refs["Rennes"]
+    line_ref = line_refs["B"]
+    stops_ref = stops_refs["Villepinte"]
 
-    # stop_monitoring_data_aller = fetch_monitoring_stop_info(
-    #     line=line_ref, stop=stops_ref[0]
-    # )
-    # stop_monitoring_data_retour = fetch_monitoring_stop_info(
-    #     line=line_ref, stop=stops_ref[1]
-    # )
-    # next_train_aller = parse_monitoring_stop_info(
-    #     data=stop_monitoring_data_aller, num_trains=1
-    # )
-    # next_train_retour = parse_monitoring_stop_info(
-    #     data=stop_monitoring_data_retour, num_trains=1
-    # )
+    print('{line_ref=} - {stops_ref=}')
 
-    # print(next_train_aller)
-    # print(next_train_retour)
+    stop_monitoring_data_aller = fetch_monitoring_stop_info(
+        line=line_ref, stop=stops_ref[0]
+    )
+    stop_monitoring_data_retour = fetch_monitoring_stop_info(
+        line=line_ref, stop=stops_ref[1]
+    )
+    next_train_aller = parse_monitoring_stop_info(
+        data=stop_monitoring_data_aller, num_trains=1
+    )
+    next_train_retour = parse_monitoring_stop_info(
+        data=stop_monitoring_data_retour, num_trains=1
+    )
 
-    print(fetch_stops_names(conn=conn, type="tram", line="1"))
+    print(next_train_aller)
+    print(next_train_retour)
