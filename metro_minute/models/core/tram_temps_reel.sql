@@ -1,6 +1,6 @@
 SELECT
     tr.MonitoringRef_ArR as ar_rref,
-    tr.arrname as ar_rname,
+    {{ clean_stop_name('tr.arrname') }} as ar_rname,
     a.ar_rtown,
     tr.lineref as line_ref,
     tr.name_line,
