@@ -59,10 +59,10 @@ CREATE TABLE IF NOT EXISTS referentiel_raw.donnees_temps_reel (
     Name_Line VARCHAR(255)
 );
 
-\copy referentiel_raw.arrets FROM './arrets.csv' DELIMITER ';' CSV HEADER;
+\copy referentiel_raw.arrets FROM 'data/arrets.csv' DELIMITER ';' CSV HEADER;
 
-\copy referentiel_raw.lignes FROM './lignes.csv' DELIMITER ';' CSV HEADER;
+\copy referentiel_raw.lignes FROM 'data/lignes.csv' DELIMITER ';' CSV HEADER;
 
-\copy referentiel_raw.donnees_temps_reel FROM './donnees-temps-reel.csv' DELIMITER ';' CSV HEADER;
+\copy referentiel_raw.donnees_temps_reel FROM 'data/donnees-temps-reel.csv' DELIMITER ';' CSV HEADER;
 
 COMMIT;
