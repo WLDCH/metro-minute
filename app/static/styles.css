@@ -82,6 +82,20 @@ button {
     height: 30px;
 }
 
+#transilien-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+#transilien-buttons img {
+    margin: 5px;
+    cursor: pointer;
+    width: 30px; 
+    height: 30px;
+}
+
 #tram-buttons {
     display: flex;
     flex-wrap: wrap;
