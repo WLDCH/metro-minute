@@ -1,14 +1,11 @@
-from configparser import ConfigParser
+import os
 
 import pytz
 
-config = ConfigParser()
-config.read("config.ini")
-
 paris_tz = pytz.timezone("Europe/Paris")
 
+API_TOKEN = os.getenv("API_TOKEN")
 
-API_TOKEN = config["api-token"]["TOKEN"]
 
 BASE_URL = "https://prim.iledefrance-mobilites.fr/marketplace"
 HEADERS = {
