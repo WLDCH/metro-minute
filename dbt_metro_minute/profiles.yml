@@ -1,0 +1,20 @@
+metro_minute:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: postgres
+      port: 5432
+      dbname: metrominute
+      schema: core
+
+    container:
+      type: postgres
+      host: db
+      user: postgres
+      password: postgres
+      port: 5432
+      dbname: metrominute
+      schema: core
