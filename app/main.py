@@ -5,9 +5,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from services import (fetch_line_references, fetch_monitoring_stop_info,
-                      fetch_stops_names, fetch_stops_references,
-                      parse_monitoring_stop_info)
+from services import (
+    fetch_line_references,
+    fetch_monitoring_stop_info,
+    fetch_stops_names,
+    fetch_stops_references,
+    parse_monitoring_stop_info,
+)
 from starlette.requests import Request
 
 app = FastAPI()
@@ -45,39 +49,25 @@ async def get_schedules(
     lines_refs = fetch_line_references(conn=get_db_connection(), type=type)
     stops_refs = fetch_stops_references(conn=get_db_connection(), type=type, line=line)
     line_ref = lines_refs[line]
-    stop_ref_aller = stops_refs[stop][0]
-    stop_ref_retour = stops_refs[stop][1] if len(stops_refs[stop]) > 1 else []
 
-    stop_monitoring_data_aller = fetch_monitoring_stop_info(
-        line=line_ref, stop=stop_ref_aller
-    )
-    next_train_aller = parse_monitoring_stop_info(
-        data=stop_monitoring_data_aller, num_trains=10
-    )
-
-    if stop_ref_retour != []:
-        stop_monitoring_data_retour = fetch_monitoring_stop_info(
-            line=line_ref, stop=stop_ref_retour
+    next_trains = []
+    for stop_ref in stops_refs[stop]:
+        stop_monitoring_data = fetch_monitoring_stop_info(line=line_ref, stop=stop_ref)
+        next_train = parse_monitoring_stop_info(
+            data=stop_monitoring_data, num_trains=10
         )
-        next_train_retour = parse_monitoring_stop_info(
-            data=stop_monitoring_data_retour, num_trains=10
-        )
-    else:
-        next_train_retour = []
+        next_trains.extend(next_train)
 
     return {
         "schedules_in_minutes": [
-            next_train.arrival_time_in_minutes for next_train in next_train_aller
-        ]
-        + [next_train.arrival_time_in_minutes for next_train in next_train_retour],
+            next_train.arrival_time_in_minutes for next_train in next_trains
+        ],
         "schedules_in_time": [
-            next_train.arrival_time_local for next_train in next_train_aller
-        ]
-        + [next_train.arrival_time_local for next_train in next_train_retour],
+            next_train.arrival_time_local for next_train in next_trains
+        ],
         "destination_names": [
-            next_train.destination_name for next_train in next_train_aller
-        ]
-        + [next_train.destination_name for next_train in next_train_retour],
+            next_train.destination_name for next_train in next_trains
+        ],
     }
 
 
