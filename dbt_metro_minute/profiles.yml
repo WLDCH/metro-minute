@@ -6,7 +6,7 @@ metro_minute:
       host: localhost
       user: postgres
       password: postgres
-      port: 5432
+      port: 5433
       dbname: metrominute
       schema: core
 
@@ -18,3 +18,13 @@ metro_minute:
       port: 5432
       dbname: metrominute
       schema: core
+
+    gcp:
+      type: postgres
+      host: "{{ env_var('DATABASE_HOST') }}"
+      user: "{{ env_var('DATABASE_USER') }}"
+      password: "{{ env_var('DATABASE_PASSWORD') }}"
+      port: "{{ env_var('DATABASE_PORT') | int }}"
+      dbname: metrominute
+      schema: core
+      connect_timeout: 30
