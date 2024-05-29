@@ -6,7 +6,7 @@
 
 # config files
 *.ini
-.env
+*.env
 
 *.ipynb
 
