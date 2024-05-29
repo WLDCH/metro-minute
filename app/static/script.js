@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const stopsList = document.getElementById('stops-list');
             stopsList.innerHTML = ''; // Clear previous list items
 
+            const schedulesContainer = document.getElementById('schedules-container');
+            schedulesContainer.innerHTML = '';
+
             if (data.stops.length > 0) {
                 const select = document.createElement('select');
                 select.setAttribute('data-line', line);
@@ -88,20 +91,32 @@ document.addEventListener('DOMContentLoaded', (event) => {
         .then(data => {
             console.log('Stop schedules received:', data);
 
-            if (data.schedules_in_minutes && data.schedules_in_minutes.length > 0) {
-                data.schedules_in_minutes.forEach((schedule, index) => {
+             if (data.schedules_in_minutes && data.schedules_in_minutes.length > 0) {
+                // Créer un tableau d'indices
+                const indices = [...data.schedules_in_minutes.keys()];
+
+                // Trier les indices en fonction de schedules_in_minutes
+                indices.sort((a, b) => parseFloat(data.schedules_in_minutes[a]) - parseFloat(data.schedules_in_minutes[b]));
+
+                // Réorganiser les tableaux en utilisant les indices triés
+                const sortedSchedulesInMinutes = indices.map(i => data.schedules_in_minutes[i]);
+                const sortedDestinationNames = indices.map(i => data.destination_names[i]);
+                const sortedSchedulesInTime = indices.map(i => data.schedules_in_time[i]);
+
+                // Afficher les horaires triés
+                sortedSchedulesInMinutes.forEach((schedule, index) => {
                     const scheduleItem = document.createElement('div');
                     scheduleItem.classList.add('schedule-item');
 
                     const destination = document.createElement('span');
                     destination.classList.add('destination');
-                    destination.textContent = data.destination_names[index];
+                    destination.textContent = sortedDestinationNames[index];
 
                     const minutes = parseFloat(schedule);
                     const formattedMinutes = formatMinutes(minutes);
                     const time = document.createElement('span');
                     time.classList.add('time');
-                    time.textContent = `${formattedMinutes} (${data.schedules_in_time[index]})`;
+                    time.textContent = `${formattedMinutes} (${sortedSchedulesInTime[index]})`;
 
                     scheduleItem.appendChild(destination);
                     scheduleItem.appendChild(time);
@@ -114,7 +129,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         })
         .catch(error => console.error('Error fetching stop schedules:', error));
-    }
+}
 
     function refreshSchedules() {
         if (currentStop && currentLine && currentType) {
