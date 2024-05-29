@@ -9,5 +9,6 @@
 *.env
 
 *.ipynb
+*Zone.Identifier
 
 */__pycache__/
