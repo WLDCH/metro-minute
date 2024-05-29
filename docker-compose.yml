@@ -3,29 +3,24 @@ services:
     build: .
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@metromdbinute:5432/metrominute
-      - API_TOKEN=${API_TOKEN}
-      - DATABASE_HOST=db
-      - DATABASE_NAME=metrominute
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_PORT=5432
+    env_file:
+      - path: ./local.env
     depends_on:
       db:
         condition: service_healthy
+    entrypoint: ["sh", "entrypoint.sh"]
 
 
   db:
     image: postgres:13
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=metrominute
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 2s
+      timeout: 10s
+      retries: 20

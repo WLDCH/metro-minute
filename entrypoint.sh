@@ -12,6 +12,6 @@ PGPASSWORD=$DATABASE_PASSWORD psql -h "$DATABASE_HOST" -p "$DATABASE_PORT" -U "$
 
 >&2 echo "SQL init command executed"
 
-dbt run --profiles-dir ./dbt_metro_minute/ --project-dir ./dbt_metro_minute/
+dbt run --profiles-dir ./dbt_metro_minute/ --project-dir ./dbt_metro_minute/ --target "container"
 
 exec python app/main.py

@@ -30,19 +30,25 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 ENV VIRTUAL_ENV=/metro_minute/.venv \
-    PATH=/metro_minute/.venv/bin:$PATH
+    PATH=/metro_minute/.venv/bin:$PATH \
+    DATABASE_HOST=${DATABASE_HOST} \
+    DATABASE_USER=${DATABASE_USER} \
+    DATABASE_PASSWORD=${DATABASE_PASSWORD} \
+    DATABASE_PORT=${DATABASE_PORT} \
+    API_TOKEN=${API_TOKEN} \
+    PORT=${PORT}
 
 WORKDIR /metro_minute
 
 COPY --from=builder /metro_minute/.venv /metro_minute/.venv
 
-COPY ./app ./app
-COPY ./dbt_metro_minute ./metro_minute
+COPY ./dbt_metro_minute ./dbt_metro_minute
 COPY ./data ./data
 COPY entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
 
+COPY ./app ./app
+
 EXPOSE 8000
 
-ENTRYPOINT ["sh", "entrypoint.sh"]
-# RUN ls && entrypoint.sh
+ENTRYPOINT ["python", "app/main.py"]
