@@ -12,3 +12,5 @@
 *Zone.Identifier
 
 */__pycache__/
+
+.terraform/
