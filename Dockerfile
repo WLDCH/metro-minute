@@ -30,13 +30,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 ENV VIRTUAL_ENV=/metro_minute/.venv \
-    PATH=/metro_minute/.venv/bin:$PATH \
-    DATABASE_HOST=${DATABASE_HOST} \
-    DATABASE_USER=${DATABASE_USER} \
-    DATABASE_PASSWORD=${DATABASE_PASSWORD} \
-    DATABASE_PORT=${DATABASE_PORT} \
-    API_TOKEN=${API_TOKEN} \
-    PORT=${PORT}
+    PATH=/metro_minute/.venv/bin:$PATH
 
 WORKDIR /metro_minute
 
