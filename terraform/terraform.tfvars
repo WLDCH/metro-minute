@@ -1,3 +1,3 @@
 project = "metro-minute"
-region = "europe-west1"
+region  = "europe-west1"
 

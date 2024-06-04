@@ -15,16 +15,16 @@ provider "google" {
 }
 
 variable "project" {
-    type = string
+  type = string
 }
 
 variable "region" {
-    type = string
+  type = string
 }
 
 variable "api_token" {
-    description = "API token for accessing PRIM API"
-    type = string
-    sensitive = true
+  description = "API token for accessing PRIM API"
+  type        = string
+  sensitive   = true
 }
 
