@@ -28,8 +28,8 @@ app.add_middleware(
     allow_headers=["*"],  # Autorise tous les en-têtes de requête
 )
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="webapp/build/static"), name="static")
+templates = Jinja2Templates(directory="webapp/build")
 
 
 @app.get("/", response_class=HTMLResponse)
