@@ -1,92 +1,131 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    display: flex;
-  }
-  
-  .sidebar {
-    width: 200px;
-    background: #f0f0f0;
-    padding: 20px;
-  }
-  
-  .content {
-    flex-grow: 1;
-    padding: 20px;
-    align-items: center;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  ul li {
-    margin-bottom: 10px;
-  }
-  
-  a {
-    text-decoration: none;
-    color: #000;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  .section {
-    display: none;
-  }
-  
-  #horaire-section {
-    display: block;
-    text-align: center;
-  }
-  
-  button {
-    margin: 5px;
-    padding: 10px;
-  }
-  
-  #metro-buttons,
-  #rer-buttons,
-  #transilien-buttons,
-  #tram-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  #metro-buttons img,
-  #rer-buttons img,
-  #transilien-buttons img,
-  #tram-buttons img {
-    margin: 5px;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-  }
-  
-  .schedule-item {
-    display: flex;
-    justify-content: space-between;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 5px;
-  }
-  
-  .schedule-item .destination {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  .schedule-item .time {
-    font-style: italic;
-  }
-  
+/* styles.css */
+
+.fade-container {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+/* ... votre CSS existant ... */
+
+.stops-list-container,
+.schedules-container {
+  min-height: 100px; /* Ajustez cette valeur selon vos besoins */
+  transition: opacity 0.5s ease-in-out;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none; /* Désactiver les interactions pendant le fondu */
+}
+
+.container {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background: #f0f0f0;
+  padding: 20px;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centrer les éléments horizontalement */
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.section {
+  display: none;
+}
+
+#horaire-section {
+  display: block;
+  text-align: center;
+}
+
+button {
+  margin: 5px;
+  padding: 10px;
+}
+
+.transport-toggle {
+  margin: 10px 0; /* Réduire l'espace entre les boutons */
+  text-align: center;
+}
+
+.transport-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: #003366;
+  font-weight: bold;
+  font-size: 1.2em; /* Augmentez la taille de la police */
+  border-radius: 8px; /* Ajoutez des coins arrondis */
+  width: 800px; /* Augmentez la largeur des boutons */
+  transition: background-color 0.3s; /* Ajoutez une transition pour la couleur de fond */
+}
+
+.transport-button:hover {
+  background-color: #e0e0e0;
+}
+
+.transport-logo {
+  margin-right: 10px;
+  width: 30px; /* Agrandissez les logos */
+  height: 30px;
+}
+
+.transport-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Transition pour l'ouverture et la fermeture */
+  opacity: 0;
+}
+
+.transport-buttons.open {
+  max-height: 200px; /* Ajustez cette valeur selon vos besoins */
+  opacity: 1;
+}
+
+.line-button {
+  margin: 5px;
+  cursor: pointer;
+  width: 30px; /* Agrandissez les boutons de ligne */
+  height: 30px;
+}

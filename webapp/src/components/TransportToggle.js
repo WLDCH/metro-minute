@@ -13,19 +13,17 @@ const TransportToggle = ({ type, logo, buttons }) => {
         <img src={logo} alt={`${type} logo`} className="transport-logo" />
         <span>{type}</span>
       </button>
-      {isOpen && (
-        <div className="transport-buttons">
-          {buttons.map((button, index) => (
-            <img
-              key={index}
-              src={button.src}
-              alt={button.alt}
-              onClick={() => button.onClick()}
-              className="line-button"
-            />
-          ))}
-        </div>
-      )}
+      <div className={`transport-buttons ${isOpen ? 'open' : ''}`}>
+        {buttons.map((button, index) => (
+          <img
+            key={index}
+            src={button.src}
+            alt={button.alt}
+            onClick={() => button.onClick()}
+            className="line-button"
+          />
+        ))}
+      </div>
     </div>
   );
 };
