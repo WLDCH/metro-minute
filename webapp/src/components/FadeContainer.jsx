@@ -11,20 +11,20 @@ const FadeContainer = ({ isVisible, children, onFadeOutEnd, duration = 500 }) =>
       timeoutId = setTimeout(() => {
         setShouldRender(true);
         setIsFading(false);
-      }, duration); // Correspond à la durée de l'animation de fondu
+      }, duration);
     } else {
       setIsFading(true);
       timeoutId = setTimeout(() => {
         setShouldRender(false);
         setIsFading(false);
         onFadeOutEnd();
-      }, duration); // Correspond à la durée de l'animation de fondu
+      }, duration);
     }
     return () => clearTimeout(timeoutId);
   }, [isVisible, onFadeOutEnd, duration]);
 
   return shouldRender || isFading ? (
-    <div className={`fade-container ${isVisible ? 'fade-in' : 'fade-out'}`} style={{ transitionDuration: `${duration}ms` }}>
+    <div style={{ transitionDuration: `${duration}ms`, transitionProperty: 'opacity', opacity: isVisible ? '1' : '0' }}>
       {children}
     </div>
   ) : null;

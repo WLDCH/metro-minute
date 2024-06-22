@@ -1,0 +1,83 @@
+/* styles.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  text-align: center;
+}
+
+button {
+  margin: 5px;
+  padding: 10px;
+}
+
+.transport-toggles {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.stops-list-container, .schedules-container {
+  min-height: 100px;
+  transition: opacity 0.5s ease-in-out;
+  margin-top: 20px;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fade-container {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+/* Styles pour les boutons de transport */
+.transport-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: #003366;
+  font-weight: bold;
+  font-size: 1.2em;
+  border-radius: 8px;
+  width: 200px;
+  transition: background-color 0.3s;
+}
+
+.transport-button:hover {
+  background-color: #e0e0e0;
+}
+
+.transport-logo {
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+}
+
+.line-button {
+  margin: 5px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}

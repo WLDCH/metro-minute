@@ -1,0 +1,48 @@
+/* TransportToggle.css */
+
+.transport-toggle {
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  .transport-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    color: #003366;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-radius: 8px;
+    width: 200px;
+    transition: background-color 0.3s;
+  }
+  
+  .transport-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .transport-logo {
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+  }
+  
+  .transport-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .line-button {
+    margin: 5px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+  }
+  
