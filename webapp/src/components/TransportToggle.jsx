@@ -12,9 +12,9 @@ const TransportToggle = ({ type, logo, onClickHandler }) => {
   const buttons = getTransportButtons(onClickHandler)[type.toLowerCase()] || [];
 
   return (
-    <div style={{ margin: '10px 0', textAlign: 'center' }}>
+    <div style={{ margin: '10px 0', textAlign: 'center', flexGrow: 1, maxWidth: '250px' }}>
       <button onClick={toggleOpen} style={transportButtonStyle}>
-        <img src={logo} alt={`${type} logo`} style={{ marginRight: '10px', width: '30px', height: '30px' }} />
+        <img src={logo} alt={`${type} logo`} style={{ marginRight: '15px', width: '30px', height: '30px' }} />
         <span>{type}</span>
       </button>
       <div style={{ ...transportButtonsStyle, ...(isOpen ? openStyle : closedStyle) }}>
@@ -37,31 +37,35 @@ const transportButtonStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: '#f0f0f0',
-  border: 'none',
+  border: 'none', // Supprimer la bordure
   padding: '10px',
   cursor: 'pointer',
   color: '#003366',
   fontWeight: 'bold',
-  fontSize: '1.2em',
+  fontSize: '1em',
   borderRadius: '8px',
-  width: '800px',
+  width: '250px', // Augmenter la largeur des boutons
+  boxSizing: 'border-box',
   transition: 'background-color 0.3s',
+  textAlign: 'center', // Centrer le texte à l'intérieur du bouton
+  outline: 'none', // Enlever le contour bleu foncé
 };
 
 const transportButtonsStyle = {
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'center',
+  alignItems: 'center',
   gap: '10px',
   marginTop: '10px',
   overflow: 'hidden',
-  maxHeight: '0',
   transition: 'max-height 0.5s ease-in-out, opacity 0.5s ease-in-out',
   opacity: '0',
+  maxHeight: '0',
 };
 
 const openStyle = {
-  maxHeight: '200px',
+  maxHeight: '400px',
   opacity: '1',
 };
 

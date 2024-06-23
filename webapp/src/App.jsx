@@ -112,10 +112,12 @@ const App = () => {
         {section === 'horaire' && (
           <div style={{ textAlign: 'center' }}>
             <h2>Horaires</h2>
-            <TransportToggle type="Metro" logo="/static/images/metro.png" onClickHandler={loadStopsNames} />
-            <TransportToggle type="Tramway" logo="/static/images/tramway.png" onClickHandler={loadStopsNames} />
-            <TransportToggle type="Transilien" logo="/static/images/transilien.png" onClickHandler={loadStopsNames} />
-            <TransportToggle type="RER" logo="/static/images/rer.png" onClickHandler={loadStopsNames} />
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', width: '100%' }}>
+              <TransportToggle type="Metro" logo="/static/images/metro.png" onClickHandler={loadStopsNames} />
+              <TransportToggle type="Tramway" logo="/static/images/tramway.png" onClickHandler={loadStopsNames} />
+              <TransportToggle type="Transilien" logo="/static/images/transilien.png" onClickHandler={loadStopsNames} />
+              <TransportToggle type="RER" logo="/static/images/rer.png" onClickHandler={loadStopsNames} />
+            </div>
             <div style={{ minHeight: '100px', transition: 'opacity 0.5s ease-in-out' }}>
               <FadeContainer isVisible={!fadeOutStops && stopsFetched && !loadingNewStops} onFadeOutEnd={() => setStops([])} duration={transitionDuration}>
                 <StopsList stops={stops} handleStopSelection={handleStopSelection} hasFetched={stopsFetched} />
